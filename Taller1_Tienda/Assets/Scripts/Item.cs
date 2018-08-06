@@ -5,21 +5,49 @@ using UnityEngine;
 public class Item : Buy
 {
     public delegate void WriteVbles();
-    public static event WriteVbles OnWriteCoins;
+    public static event WriteVbles OnWriteCurrency, OnBuyFirstItem;
 
-    private void Start()
+    public Item(int _coins, int _wood, int _stone)
     {
-        Singleton.instance.Coins = 100;
-        cost = 20;
+        coins = _coins;
+        wood = _wood;
+        stone = _stone;
     }
 
     protected override void BuyItem()
     {
-        Singleton.instance.Coins += cost *-1;
+        if (Singleton.instance.Coins >= coins && Singleton.instance.Wood >= wood && Singleton.instance.Stone >= stone)
+        {
+            Debug.Log("Compradoo");
+            Singleton.instance.Coins += coins *-1;
+            Singleton.instance.Wood += wood *-1;
+            Singleton.instance.Stone += stone*-1;
+
+            Singleton.instance.FirstItem++;
+        }
+        else {
+            Debug.Log("No posees recursos, vuelve más tarde");
+        }
     }
 
     public void ButtonBuy() {
         BuyItem();
-        OnWriteCoins();
+        OnWriteCurrency();
+        OnBuyFirstItem();
+    }
+
+    protected override void ConsumableItem()
+    {
+        Singleton.instance.FirstItem--;
+        OnBuyFirstItem();
+    }
+
+    public void Consuming() {
+        ConsumableItem();
+    }
+
+    protected override void NonConsumable()
+    {
+        throw new System.NotImplementedException();
     }
 }
