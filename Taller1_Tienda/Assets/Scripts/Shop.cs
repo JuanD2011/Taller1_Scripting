@@ -8,17 +8,30 @@ public class Shop
     public static event Compra OnExisteNonConsumable;
 
     Item itemUno;
+    Item itemDos;
 
     public Shop() {
         itemUno = new Consumable(1,2,5,6);
+        itemDos = new NonCosumable(2,4,0,0);
     }
 
     public void Comprar(int _id) {
         Item _item = null;
 
-        if (_id == itemUno.Id) {
-            _item = itemUno;
+        /*if (_id == itemDos.Id) {
+            _item = itemDos;
+        }*/
+        switch (_id) {
+            case 1:
+                _item = itemUno;
+                break;
+            case 2:
+                _item = itemDos;
+                break;
+            default:
+                break;
         }
+
         if (Inventario._Inventario.VerificaDisponibilidadMonetaria(_item.Costo))
         {
             if (Inventario._Inventario.VerificarExistencia(_item))

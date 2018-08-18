@@ -23,9 +23,6 @@ public class Inventario {
         }
     }
 
-    public delegate void ItemsAlmacenados(Item _item);
-    public static event ItemsAlmacenados OnConsumirItem;
-
     public Inventario() {
         billetera.Add(TypeCurrency.firstCurrency, 40);
         billetera.Add(TypeCurrency.secondCurrency, 40);
@@ -96,7 +93,5 @@ public class Inventario {
 
     public void ConsumirItem(Item _item) {
         inventario[_item.Id] -= 1;
-        OnConsumirItem(_item);
-
     }
 }
