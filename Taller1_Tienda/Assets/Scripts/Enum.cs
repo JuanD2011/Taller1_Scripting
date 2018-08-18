@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public enum Type {
-    firstItem,
-    secondItem,
-    thirdItem
+﻿public enum TypeCurrency {
+    firstCurrency,
+    secondCurrency,
+    thirdCurrency
 }

@@ -1,53 +1,37 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class Item : Buy
+public abstract class Item
 {
-    public delegate void WriteVbles();
-    public static event WriteVbles OnWriteCurrency, OnBuyFirstItem;
-
-    public Item(int _coins, int _wood, int _stone)
+    int id;
+    public int Id
     {
-        coins = _coins;
-        wood = _wood;
-        stone = _stone;
-    }
-
-    protected override void BuyItem()
-    {
-        if (Singleton.instance.Coins >= coins && Singleton.instance.Wood >= wood && Singleton.instance.Stone >= stone)
+        get
         {
-            Debug.Log("Compradoo");
-            Singleton.instance.Coins += coins *-1;
-            Singleton.instance.Wood += wood *-1;
-            Singleton.instance.Stone += stone*-1;
-
-            Singleton.instance.FirstItem++;
-        }
-        else {
-            Debug.Log("No posees recursos, vuelve más tarde");
+            return id;
         }
     }
 
-    public void ButtonBuy() {
-        BuyItem();
-        OnWriteCurrency();
-        OnBuyFirstItem();
-    }
-
-    protected override void ConsumableItem()
+    public Dictionary<TypeCurrency, int> Costo
     {
-        Singleton.instance.FirstItem--;
-        OnBuyFirstItem();
+        get
+        {
+            return costo;
+        }
+
+        set
+        {
+            costo = value;
+        }
     }
 
-    public void Consuming() {
-        ConsumableItem();
+    Dictionary<TypeCurrency, int> costo = new Dictionary<TypeCurrency, int>();
+
+    public Item(int _id, int _costoCurrencyUno, int _costoCurrencyDos, int _costoCurrencyTres) {
+        id = _id;
+        Costo.Add(TypeCurrency.firstCurrency, _costoCurrencyUno);
+        Costo.Add(TypeCurrency.secondCurrency, _costoCurrencyDos);
+        Costo.Add(TypeCurrency.thirdCurrency, _costoCurrencyTres);
     }
 
-    protected override void NonConsumable()
-    {
-        throw new System.NotImplementedException();
-    }
 }
