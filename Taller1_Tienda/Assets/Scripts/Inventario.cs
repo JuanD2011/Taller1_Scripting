@@ -25,7 +25,8 @@ public class Inventario
     }
 
     public delegate void InventarioDelegate();
-    public static event InventarioDelegate OnDescarteSatisfactorio;
+    public static event InventarioDelegate OnDescarteSatisfactorio, OnDescarteNonConsumable;
+    public static event InventarioDelegate OnConsumirItem, OnConsumirNonConsumable;
 
     public Inventario()
     {
@@ -105,25 +106,35 @@ public class Inventario
     {
         Item _item = ConversorIdtoItem(_id);
 
-        if(_item is Consumable && _item != null)
+        if (_item is Consumable && _item != null && PInventario[_item] > 0)
         {
             inventario[_item] -= _valorADescartar;
             if (inventario[_item] < 0)
             {
                 inventario[_item] = 0;
             }
-
             OnDescarteSatisfactorio();
+        }
+        else {
+            OnDescarteNonConsumable();
         }
     }
 
     public void ConsumirItem(Item _item)
     {
-		if(_item is Consumable)
-		{
-			inventario[_item] -= 1;
-			//Item consumido
-		}
+        if (_item is Consumable)
+        {
+            if(PInventario[_item] > 0)
+            {
+                inventario[_item] -= 1;
+                OnConsumirItem();
+                //Item consumido
+            }
+        }
+        else {
+            OnConsumirNonConsumable();
+            //No puedes consumir el item
+        }
     }
 
     public Item ConversorIdtoItem(int _id)

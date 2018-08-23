@@ -7,11 +7,12 @@ public class EngineUnity : MonoBehaviour {
 
     [SerializeField] Text currencyUno, currencyDos, currencyTres;//currency
     [SerializeField] Text compras, descarte;
-    [SerializeField] Text itemUnoTxt, itemUnoTxtInv;
-    [SerializeField] Text itemDosTxt, itemDosTxtInv;
+    [SerializeField] Text[] itemsTxt;
+    [SerializeField] Text[] itemsInvTxt;
     [SerializeField] AudioClip[] audioClips;
     [SerializeField] GameObject canvasShop, canvasInventory;
     [SerializeField] GameObject InitialText;
+    [SerializeField] InputField descarteInput;
 
     void Start () {
 
@@ -20,8 +21,10 @@ public class EngineUnity : MonoBehaviour {
         Shop.OnSatisfactoria += CompraTxtSatisfactoria;
         Shop.OnInsatisfactoria += CompraTxtInsatisfactoria;
         Shop.OnExisteNonConsumable += YaExisteNonConsumable;
-        Inventario.OnDescarteSatisfactorio += TxtDescarteSatisfactorio;
-        // Inventario.OnConsumirItem += ConsumirItem;
+        Inventario.OnDescarteSatisfactorio += DescarteSatisfactorio;
+        Inventario.OnDescarteNonConsumable += NoPuedesDescartarEsto;
+        Inventario.OnConsumirItem += ItemConsumido;
+        Inventario.OnConsumirNonConsumable += ItemNoConsumido;
         canvasShop.SetActive(false);
         canvasInventory.SetActive(false);
         WriteCurrency();
@@ -104,7 +107,7 @@ public class EngineUnity : MonoBehaviour {
         compras.text = " ";
     }
 
-    public void TxtDescarteSatisfactorio() {
+    public void DescarteSatisfactorio() {
         StartCoroutine(TxtDescarte());
         GetComponent<AudioSource>().clip = audioClips[3];
         GetComponent<AudioSource>().Play();
@@ -117,13 +120,65 @@ public class EngineUnity : MonoBehaviour {
         descarte.text = " ";
     }
 
+    public void NoPuedesDescartarEsto() {
+        StartCoroutine(TxtNoPuedesDescartarEsto());
+        GetComponent<AudioSource>().clip = audioClips[3];
+        GetComponent<AudioSource>().Play();
+    }
+
+    IEnumerator TxtNoPuedesDescartarEsto() {
+        descarte.text = "No lo puedes descartar";
+        yield return new WaitForSeconds(0.5f);
+        descarte.text = " ";
+    }
+
+    public void ItemConsumido() {
+        StartCoroutine(TxtItemConsumido());
+        GetComponent<AudioSource>().clip = audioClips[3];
+        GetComponent<AudioSource>().Play();
+    }
+
+    IEnumerator TxtItemConsumido() {
+        descarte.text = "Item consumido";
+        yield return new WaitForSeconds(0.5f);
+        descarte.text = " ";
+
+    }
+
+    public void ItemNoConsumido() {
+        StartCoroutine(TxtItemNoConsumido());
+        GetComponent<AudioSource>().clip = audioClips[3];
+        GetComponent<AudioSource>().Play();
+    }
+
+    IEnumerator TxtItemNoConsumido()
+    {
+        descarte.text = "No puedes consumir item";
+        yield return new WaitForSeconds(0.5f);
+        descarte.text = " ";
+
+    }
+
     public void Boton(int _id)
     {
-
         GameController._GameController.mShop.Comprar(_id);
         Item item = Inventario.Instancia.ConversorIdtoItem(_id);
-        itemUnoTxt.text = Inventario.Instancia.PInventario[item].ToString();
-        itemUnoTxtInv.text = Inventario.Instancia.PInventario[item].ToString();
+        itemsTxt[_id-1].text = Inventario.Instancia.PInventario[item].ToString();
+        itemsInvTxt[_id-1].text = Inventario.Instancia.PInventario[item].ToString();
+    }
+
+    public void BotonDescarte(int _id) {
+        int textoInput;
+        textoInput = int.Parse(descarteInput.text);
+        Item item = Inventario.Instancia.ConversorIdtoItem(_id);
+        Inventario.Instancia.DescartarItem(_id, textoInput);
+        itemsInvTxt[_id-1].text = Inventario.Instancia.PInventario[item].ToString();
+    }
+
+    public void BotonConsumir(int _id) {
+        Item item = Inventario.Instancia.ConversorIdtoItem(_id);
+        Inventario.Instancia.ConsumirItem(item);
+        itemsInvTxt[_id - 1].text = Inventario.Instancia.PInventario[item].ToString();
     }
 
     #region modificarCurrency
@@ -148,12 +203,4 @@ public class EngineUnity : MonoBehaviour {
     }
     #endregion
 
-    public void DescartarItem(int _id, string _descartar)
-    {
-        Item item = Inventario.Instancia.ConversorIdtoItem(_id);
-
-        int cantidad = int.Parse(_descartar);
-        Inventario.Instancia.DescartarItem(1 , cantidad);
-        itemUnoTxtInv.text = Inventario.Instancia.PInventario[item].ToString();
-    }
 }

@@ -55,11 +55,11 @@ public class Shop
         }
     }
 
-    public void Consumir(Item _item)
+   /* public void Consumir(Item _item)
     {
         if (_item is Consumable)
         {
             Inventario.Instancia.ConsumirItem(_item);
         }
-    }
+    }*/
 }
