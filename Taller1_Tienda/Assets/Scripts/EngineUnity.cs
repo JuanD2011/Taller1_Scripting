@@ -60,14 +60,14 @@ public class EngineUnity : MonoBehaviour {
     }
 
     private void WriteCurrency() {
-        currencyUno.text = Inventario._Inventario.Billetera[TypeCurrency.firstCurrency].ToString("0");
-        currencyDos.text = Inventario._Inventario.Billetera[TypeCurrency.secondCurrency].ToString("0");
-        currencyTres.text = Inventario._Inventario.Billetera[TypeCurrency.thirdCurrency].ToString("0");
+        currencyUno.text = Inventario.Instancia.Billetera[TypeCurrency.firstCurrency].ToString("0");
+        currencyDos.text = Inventario.Instancia.Billetera[TypeCurrency.secondCurrency].ToString("0");
+        currencyTres.text = Inventario.Instancia.Billetera[TypeCurrency.thirdCurrency].ToString("0");
     }
 
     public void CompraTxtSatisfactoria() {
-        StartCoroutine(TxtCompra());//Texto cuando compra satisfactoriamente
-        WriteCurrency();//Escribe las currency actuales
+        StartCoroutine(TxtCompra());
+        WriteCurrency();
         GetComponent<AudioSource>().clip = audioClips[2];
         GetComponent<AudioSource>().Play();
     }
@@ -117,62 +117,43 @@ public class EngineUnity : MonoBehaviour {
         descarte.text = " ";
     }
 
+    public void Boton(int _id)
+    {
 
-    /// <summary>
-    /// Dudoso
-    /// </summary>
-    /// <param name="_item"></param>
-    /*public void ConsumirItem(Item _item) {
-        item = _item;
-
-        switch (item.Id) {
-            case 0:
-                itemTxt.text = "";
-                break;
-            default:
-                break;
-        }
-
-    }*/
-
-    public void BtnUno() {
-
-        GameController._GameController.mShop.Comprar(1);
-        itemUnoTxt.text = Inventario._Inventario.PInventario[1].ToString();
-        itemUnoTxtInv.text = Inventario._Inventario.PInventario[1].ToString();
-    }
-
-    public void BtnDos() {
-        GameController._GameController.mShop.Comprar(2);
-        itemDosTxt.text = Inventario._Inventario.PInventario[2].ToString();
-        itemDosTxtInv.text = Inventario._Inventario.PInventario[2].ToString();
+        GameController._GameController.mShop.Comprar(_id);
+        Item item = Inventario.Instancia.ConversorIdtoItem(_id);
+        itemUnoTxt.text = Inventario.Instancia.PInventario[item].ToString();
+        itemUnoTxtInv.text = Inventario.Instancia.PInventario[item].ToString();
     }
 
     #region modificarCurrency
     public void ModificarCurrencyUno(string _input) {
         int cantidad = int.Parse(_input);
-        Inventario._Inventario.Billetera[TypeCurrency.firstCurrency] = cantidad;
+        Inventario.Instancia.Billetera[TypeCurrency.firstCurrency] = cantidad;
         WriteCurrency();
     }
 
     public void ModificarCurrencyDos(string _input)
     {
         int cantidad = int.Parse(_input);
-        Inventario._Inventario.Billetera[TypeCurrency.secondCurrency] = cantidad;
+        Inventario.Instancia.Billetera[TypeCurrency.secondCurrency] = cantidad;
         WriteCurrency();
     }
 
     public void ModificarCurrencyTres(string _input)
     {
         int cantidad = int.Parse(_input);
-        Inventario._Inventario.Billetera[TypeCurrency.thirdCurrency] = cantidad;
+        Inventario.Instancia.Billetera[TypeCurrency.thirdCurrency] = cantidad;
         WriteCurrency();
     }
     #endregion
 
-    public void DescartarItem(string _descartar) {
+    public void DescartarItem(int _id, string _descartar)
+    {
+        Item item = Inventario.Instancia.ConversorIdtoItem(_id);
+
         int cantidad = int.Parse(_descartar);
-        Inventario._Inventario.DescartarItem(1 , cantidad);
-        itemUnoTxtInv.text = Inventario._Inventario.PInventario[1].ToString();
+        Inventario.Instancia.DescartarItem(1 , cantidad);
+        itemUnoTxtInv.text = Inventario.Instancia.PInventario[item].ToString();
     }
 }

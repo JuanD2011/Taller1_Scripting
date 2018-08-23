@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-public class Inventario {
+public class Inventario
+{
 
     static Inventario instancia;
 
-    Dictionary<int, int> inventario = new Dictionary<int, int>();
-    public Dictionary<int, int> PInventario
+    Dictionary<Item, int> inventario = new Dictionary<Item, int>();
+    public Dictionary<Item, int> PInventario
     {
         get
         {
@@ -26,15 +27,17 @@ public class Inventario {
     public delegate void InventarioDelegate();
     public static event InventarioDelegate OnDescarteSatisfactorio;
 
-    public Inventario() {
+    public Inventario()
+    {
         billetera.Add(TypeCurrency.firstCurrency, 40);
         billetera.Add(TypeCurrency.secondCurrency, 40);
         billetera.Add(TypeCurrency.thirdCurrency, 40);
     }
 
-    public static Inventario _Inventario
+    public static Inventario Instancia
     {
-        get {
+        get
+        {
             if (instancia == null)
             {
                 instancia = new Inventario();
@@ -44,28 +47,30 @@ public class Inventario {
     }
 
 
-    public void Adquisicion(Item _item) {
-
+    public void Adquisicion(Item _item)
+    {
         if (_item is Consumable)
         {
-            if (inventario.ContainsKey(_item.Id))
+            if (inventario.ContainsKey(_item))
             {
-                inventario[_item.Id] += 1;
+                inventario[_item] += 1;
             }
             else {
-                inventario.Add(_item.Id, 1);
+                inventario.Add(_item, 1);
             }
         }
         if ((_item is NonCosumable))
         {
-            inventario.Add(_item.Id, 1);
+            inventario.Add(_item, 1);
         }
     }
 
-    public bool VerificarExistencia(Item _item) {
+    public bool VerificarExistencia(Item _item)
+    {
         bool existe = false;
 
-        if (_item is NonCosumable && inventario.ContainsKey(_item.Id)) {
+        if (_item is NonCosumable && inventario.ContainsKey(_item))
+        {
             existe = true;
         }
 
@@ -76,13 +81,15 @@ public class Inventario {
     /// sólo se llama cuando se puede comprar
     /// </summary>
     /// <param name="_costo"></param>
-    public void ActualizarCurrency(Dictionary<TypeCurrency, int> _costo) {
+    public void ActualizarCurrency(Dictionary<TypeCurrency, int> _costo)
+    {
         billetera[TypeCurrency.firstCurrency] += _costo[TypeCurrency.firstCurrency];
         billetera[TypeCurrency.secondCurrency] += _costo[TypeCurrency.secondCurrency];
         billetera[TypeCurrency.thirdCurrency] += _costo[TypeCurrency.thirdCurrency];
     }
 
-    public bool VerificaDisponibilidadMonetaria(Dictionary<TypeCurrency, int> _costo) {
+    public bool VerificaDisponibilidadMonetaria(Dictionary<TypeCurrency, int> _costo)
+    {
         bool puedoComprarSignoPregunta = true;
 
         if (billetera[TypeCurrency.firstCurrency] < _costo[TypeCurrency.firstCurrency] ||
@@ -94,19 +101,43 @@ public class Inventario {
         return puedoComprarSignoPregunta;
     }
 
-    public void DescartarItem(int _id, int _valorADescartar) {
+    public void DescartarItem(int _id, int _valorADescartar)
+    {
+        Item _item = ConversorIdtoItem(_id);
 
-        if (inventario.ContainsKey(_id) && a is Consumable)
+        if(_item is Consumable && _item != null)
         {
-            inventario[_id] -= _valorADescartar;
-            if (inventario[_id] < 0)
-                inventario[_id] = 0;
+            inventario[_item] -= _valorADescartar;
+            if (inventario[_item] < 0)
+            {
+                inventario[_item] = 0;
+            }
 
             OnDescarteSatisfactorio();
         }
     }
 
-    public void ConsumirItem(Item _item) {
-        inventario[_item.Id] -= 1;
+    public void ConsumirItem(Item _item)
+    {
+		if(_item is Consumable)
+		{
+			inventario[_item] -= 1;
+			//Item consumido
+		}
+    }
+
+    public Item ConversorIdtoItem(int _id)
+    {
+        Item _item = null;
+
+        foreach (KeyValuePair<Item, int> i in inventario)
+        {
+            if (_id == i.Key.Id)
+            {
+                _item = i.Key;
+            }
+        }
+
+        return _item;
     }
 }
