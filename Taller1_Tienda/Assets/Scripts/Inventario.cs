@@ -23,6 +23,9 @@ public class Inventario {
         }
     }
 
+    public delegate void InventarioDelegate();
+    public static event InventarioDelegate OnDescarteSatisfactorio;
+
     public Inventario() {
         billetera.Add(TypeCurrency.firstCurrency, 40);
         billetera.Add(TypeCurrency.secondCurrency, 40);
@@ -89,6 +92,18 @@ public class Inventario {
             puedoComprarSignoPregunta = false;
         }
         return puedoComprarSignoPregunta;
+    }
+
+    public void DescartarItem(int _id, int _valorADescartar) {
+
+        if (inventario.ContainsKey(_id) && a is Consumable)
+        {
+            inventario[_id] -= _valorADescartar;
+            if (inventario[_id] < 0)
+                inventario[_id] = 0;
+
+            OnDescarteSatisfactorio();
+        }
     }
 
     public void ConsumirItem(Item _item) {

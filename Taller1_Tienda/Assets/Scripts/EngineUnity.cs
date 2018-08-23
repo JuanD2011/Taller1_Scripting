@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class EngineUnity : MonoBehaviour {
 
     [SerializeField] Text currencyUno, currencyDos, currencyTres;//currency
-    [SerializeField] Text compras;
+    [SerializeField] Text compras, descarte;
     [SerializeField] Text itemUnoTxt, itemUnoTxtInv;
     [SerializeField] Text itemDosTxt, itemDosTxtInv;
     [SerializeField] AudioClip[] audioClips;
@@ -20,6 +20,7 @@ public class EngineUnity : MonoBehaviour {
         Shop.OnSatisfactoria += CompraTxtSatisfactoria;
         Shop.OnInsatisfactoria += CompraTxtInsatisfactoria;
         Shop.OnExisteNonConsumable += YaExisteNonConsumable;
+        Inventario.OnDescarteSatisfactorio += TxtDescarteSatisfactorio;
         // Inventario.OnConsumirItem += ConsumirItem;
         canvasShop.SetActive(false);
         canvasInventory.SetActive(false);
@@ -103,6 +104,19 @@ public class EngineUnity : MonoBehaviour {
         compras.text = " ";
     }
 
+    public void TxtDescarteSatisfactorio() {
+        StartCoroutine(TxtDescarte());
+        GetComponent<AudioSource>().clip = audioClips[3];
+        GetComponent<AudioSource>().Play();
+    }
+
+    IEnumerator TxtDescarte()
+    {
+        descarte.text = "Ha sido descartado";
+        yield return new WaitForSeconds(0.5f);
+        descarte.text = " ";
+    }
+
 
     /// <summary>
     /// Dudoso
@@ -122,6 +136,7 @@ public class EngineUnity : MonoBehaviour {
     }*/
 
     public void BtnUno() {
+
         GameController._GameController.mShop.Comprar(1);
         itemUnoTxt.text = Inventario._Inventario.PInventario[1].ToString();
         itemUnoTxtInv.text = Inventario._Inventario.PInventario[1].ToString();
@@ -154,4 +169,10 @@ public class EngineUnity : MonoBehaviour {
         WriteCurrency();
     }
     #endregion
+
+    public void DescartarItem(string _descartar) {
+        int cantidad = int.Parse(_descartar);
+        Inventario._Inventario.DescartarItem(1 , cantidad);
+        itemUnoTxtInv.text = Inventario._Inventario.PInventario[1].ToString();
+    }
 }

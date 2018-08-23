@@ -14,7 +14,6 @@ public class GameController{
             }
             return gameController;
         }
-
     }
 
     public GameController() {
