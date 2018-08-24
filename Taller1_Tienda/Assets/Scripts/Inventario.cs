@@ -124,14 +124,15 @@ public class Inventario
     {
         if (_item is Consumable)
         {
-            if(PInventario[_item] > 0)
+            if (PInventario[_item] > 0)
             {
                 inventario[_item] -= 1;
                 OnConsumirItem();
                 //Item consumido
             }
         }
-        else {
+        else
+        {
             OnConsumirNonConsumable();
             //No puedes consumir el item
         }

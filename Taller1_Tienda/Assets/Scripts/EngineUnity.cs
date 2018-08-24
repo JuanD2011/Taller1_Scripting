@@ -159,12 +159,29 @@ public class EngineUnity : MonoBehaviour {
 
     }
 
-    public void Boton(int _id)
+    public void Boton(string _ids)
     {
-        GameController._GameController.mShop.Comprar(_id);
-        Item item = Inventario.Instancia.ConversorIdtoItem(_id);
-        itemsTxt[_id-1].text = Inventario.Instancia.PInventario[item].ToString();
-        itemsInvTxt[_id-1].text = Inventario.Instancia.PInventario[item].ToString();
+        char[] ids = _ids.ToCharArray();
+
+        if(ids.Length == 1)
+        {
+            int _id = (int)char.GetNumericValue(ids[0]);
+            GameController._GameController.mShop.Comprar(_id);
+            Item item = Inventario.Instancia.ConversorIdtoItem(_id);
+            itemsTxt[_id - 1].text = Inventario.Instancia.PInventario[item].ToString();
+            itemsInvTxt[_id - 1].text = Inventario.Instancia.PInventario[item].ToString();
+        }
+        else
+        {
+            foreach (char c in ids)
+            {
+                int _id = (int)char.GetNumericValue(c);
+                GameController._GameController.mShop.Comprar(_id);
+                Item item = Inventario.Instancia.ConversorIdtoItem(_id);
+                itemsTxt[_id - 1].text = Inventario.Instancia.PInventario[item].ToString();
+                itemsInvTxt[_id - 1].text = Inventario.Instancia.PInventario[item].ToString();
+            } 
+        }
     }
 
     public void BotonDescarte(int _id) {
@@ -177,8 +194,11 @@ public class EngineUnity : MonoBehaviour {
 
     public void BotonConsumir(int _id) {
         Item item = Inventario.Instancia.ConversorIdtoItem(_id);
-        Inventario.Instancia.ConsumirItem(item);
-        itemsInvTxt[_id - 1].text = Inventario.Instancia.PInventario[item].ToString();
+        if (item != null)
+        {
+            Inventario.Instancia.ConsumirItem(item);
+            itemsInvTxt[_id - 1].text = Inventario.Instancia.PInventario[item].ToString(); 
+        }
     }
 
     #region modificarCurrency
