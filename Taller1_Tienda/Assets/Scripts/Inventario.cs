@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 public class Inventario
 {
-
-    static Inventario instancia;
-
-    Dictionary<Item, int> inventario = new Dictionary<Item, int>();
+    private static Inventario instancia;
+    private Dictionary<Item, int> inventario = new Dictionary<Item, int>();
     public Dictionary<Item, int> PInventario
     {
         get
@@ -15,7 +12,7 @@ public class Inventario
         }
     }
 
-    Dictionary<TypeCurrency, int> billetera = new Dictionary<TypeCurrency, int>();
+    private Dictionary<TypeCurrency, int> billetera = new Dictionary<TypeCurrency, int>();
     public Dictionary<TypeCurrency, int> Billetera
     {
         get
@@ -46,7 +43,6 @@ public class Inventario
             return instancia;
         }
     }
-
 
     public void Adquisicion(Item _item)
     {

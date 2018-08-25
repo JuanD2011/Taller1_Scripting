@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 public class Shop
 {
@@ -7,13 +6,15 @@ public class Shop
     public static event Compra OnSatisfactoria, OnInsatisfactoria;
     public static event Compra OnExisteNonConsumable;
 
-    Item itemUno;
-    Item itemDos;
+    private Item itemUno;
+    private Item itemDos;
+    private Item itemTres;
 
     public Shop()
     {
         itemUno = new Consumable(1,2,5,6);
         itemDos = new NonCosumable(2,4,0,0);
+        itemTres = new Consumable(3, 1, 1, 1);
     }
 
     public void Comprar(int _id)
@@ -27,6 +28,9 @@ public class Shop
                 break;
             case 2:
                 _item = itemDos;
+                break;
+            case 3:
+                _item = itemTres;
                 break;
             default:
                 break;
@@ -54,12 +58,4 @@ public class Shop
             OnInsatisfactoria();
         }
     }
-
-   /* public void Consumir(Item _item)
-    {
-        if (_item is Consumable)
-        {
-            Inventario.Instancia.ConsumirItem(_item);
-        }
-    }*/
 }

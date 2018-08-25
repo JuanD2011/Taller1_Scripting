@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 public abstract class Item
 {
-    int id;
+    private int id;
     public int Id
     {
         get
@@ -11,7 +10,7 @@ public abstract class Item
             return id;
         }
     }
-
+    private Dictionary<TypeCurrency, int> costo = new Dictionary<TypeCurrency, int>();
     public Dictionary<TypeCurrency, int> Costo
     {
         get
@@ -25,7 +24,6 @@ public abstract class Item
         }
     }
 
-    Dictionary<TypeCurrency, int> costo = new Dictionary<TypeCurrency, int>();
 
     public Item(int _id, int _costoCurrencyUno, int _costoCurrencyDos, int _costoCurrencyTres) {
         id = _id;

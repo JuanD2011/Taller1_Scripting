@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +10,7 @@ public class EngineUnity : MonoBehaviour {
     [SerializeField] Text[] itemsInvTxt;
     [SerializeField] AudioClip[] audioClips;
     [SerializeField] GameObject canvasShop, canvasInventory;
-    [SerializeField] GameObject InitialText;
+    [SerializeField] GameObject initialText;
     [SerializeField] InputField descarteInput;
 
     void Start () {
@@ -35,7 +34,7 @@ public class EngineUnity : MonoBehaviour {
         {
             canvasShop.SetActive(true);
             canvasInventory.SetActive(false);
-            InitialText.SetActive(false);
+            initialText.SetActive(false);
             GetComponent<AudioSource>().clip = audioClips[1];
             GetComponent<AudioSource>().Play();
         }
@@ -44,7 +43,7 @@ public class EngineUnity : MonoBehaviour {
         {
             canvasInventory.SetActive(true);
             canvasShop.SetActive(false);
-            InitialText.SetActive(false);
+            initialText.SetActive(false);
             GetComponent<AudioSource>().clip = audioClips[1];
             GetComponent<AudioSource>().Play();
         }
@@ -55,7 +54,7 @@ public class EngineUnity : MonoBehaviour {
             {
                 canvasShop.SetActive(false);
                 canvasInventory.SetActive(false);
-                InitialText.SetActive(true);
+                initialText.SetActive(true);
                 GetComponent<AudioSource>().clip = audioClips[0];
                 GetComponent<AudioSource>().Play();
             }
@@ -68,10 +67,49 @@ public class EngineUnity : MonoBehaviour {
         currencyTres.text = Inventario.Instancia.Billetera[TypeCurrency.thirdCurrency].ToString("0");
     }
 
-    public void CompraTxtSatisfactoria() {
+    private void CompraTxtSatisfactoria() {
         StartCoroutine(TxtCompra());
         WriteCurrency();
         GetComponent<AudioSource>().clip = audioClips[2];
+        GetComponent<AudioSource>().Play();
+    }
+
+
+    private void CompraTxtInsatisfactoria() {
+        StartCoroutine(TxtInsatisfactoria());
+        WriteCurrency();
+        GetComponent<AudioSource>().clip = audioClips[3];
+        GetComponent<AudioSource>().Play();
+    }
+
+
+    private void YaExisteNonConsumable() {
+        StartCoroutine(TxtYaExiste());
+        GetComponent<AudioSource>().clip = audioClips[4];
+        GetComponent<AudioSource>().Play();
+    }
+
+    private void DescarteSatisfactorio() {
+        StartCoroutine(TxtDescarte());
+        GetComponent<AudioSource>().clip = audioClips[3];
+        GetComponent<AudioSource>().Play();
+    }
+
+    private void NoPuedesDescartarEsto() {
+        StartCoroutine(TxtNoPuedesDescartarEsto());
+        GetComponent<AudioSource>().clip = audioClips[3];
+        GetComponent<AudioSource>().Play();
+    }
+
+    private void ItemConsumido() {
+        StartCoroutine(TxtItemConsumido());
+        GetComponent<AudioSource>().clip = audioClips[4];
+        GetComponent<AudioSource>().Play();
+    }
+
+    private void ItemNoConsumido() {
+        StartCoroutine(TxtItemNoConsumido());
+        GetComponent<AudioSource>().clip = audioClips[3];
         GetComponent<AudioSource>().Play();
     }
 
@@ -81,23 +119,10 @@ public class EngineUnity : MonoBehaviour {
         compras.text = " ";
     }
 
-    public void CompraTxtInsatisfactoria() {
-        StartCoroutine(TxtInsatisfactoria());
-        WriteCurrency();
-        GetComponent<AudioSource>().clip = audioClips[3];
-        GetComponent<AudioSource>().Play();
-    }
-
     IEnumerator TxtInsatisfactoria() {
-        compras.text = "No tienes disponibilidad monetaria, vuelve a intentarlo más tarde";
+        compras.text = "No tienes disponibilidad monetaria";
         yield return new WaitForSeconds(0.5f);
         compras.text = " ";
-    }
-
-    public void YaExisteNonConsumable() {
-        StartCoroutine(TxtYaExiste());
-        GetComponent<AudioSource>().clip = audioClips[4];
-        GetComponent<AudioSource>().Play();
     }
 
     IEnumerator TxtYaExiste()
@@ -107,12 +132,6 @@ public class EngineUnity : MonoBehaviour {
         compras.text = " ";
     }
 
-    public void DescarteSatisfactorio() {
-        StartCoroutine(TxtDescarte());
-        GetComponent<AudioSource>().clip = audioClips[3];
-        GetComponent<AudioSource>().Play();
-    }
-
     IEnumerator TxtDescarte()
     {
         descarte.text = "Ha sido descartado";
@@ -120,22 +139,10 @@ public class EngineUnity : MonoBehaviour {
         descarte.text = " ";
     }
 
-    public void NoPuedesDescartarEsto() {
-        StartCoroutine(TxtNoPuedesDescartarEsto());
-        GetComponent<AudioSource>().clip = audioClips[3];
-        GetComponent<AudioSource>().Play();
-    }
-
     IEnumerator TxtNoPuedesDescartarEsto() {
         descarte.text = "No lo puedes descartar";
         yield return new WaitForSeconds(0.5f);
         descarte.text = " ";
-    }
-
-    public void ItemConsumido() {
-        StartCoroutine(TxtItemConsumido());
-        GetComponent<AudioSource>().clip = audioClips[3];
-        GetComponent<AudioSource>().Play();
     }
 
     IEnumerator TxtItemConsumido() {
@@ -145,25 +152,17 @@ public class EngineUnity : MonoBehaviour {
 
     }
 
-    public void ItemNoConsumido() {
-        StartCoroutine(TxtItemNoConsumido());
-        GetComponent<AudioSource>().clip = audioClips[3];
-        GetComponent<AudioSource>().Play();
-    }
-
     IEnumerator TxtItemNoConsumido()
     {
         descarte.text = "No puedes consumir item";
         yield return new WaitForSeconds(0.5f);
         descarte.text = " ";
-
     }
 
     public void Boton(string _ids)
     {
         char[] ids = _ids.ToCharArray();
-
-        if(ids.Length == 1)
+        if (ids.Length == 1)
         {
             int _id = (int)char.GetNumericValue(ids[0]);
             GameController._GameController.mShop.Comprar(_id);
@@ -186,10 +185,15 @@ public class EngineUnity : MonoBehaviour {
 
     public void BotonDescarte(int _id) {
         int textoInput;
-        textoInput = int.Parse(descarteInput.text);
-        Item item = Inventario.Instancia.ConversorIdtoItem(_id);
-        Inventario.Instancia.DescartarItem(_id, textoInput);
-        itemsInvTxt[_id-1].text = Inventario.Instancia.PInventario[item].ToString();
+        if (descarteInput.text != "") {
+            textoInput = int.Parse(descarteInput.text);
+            Item item = Inventario.Instancia.ConversorIdtoItem(_id);
+            if (item != null)
+            {
+                Inventario.Instancia.DescartarItem(_id, textoInput);
+                itemsInvTxt[_id-1].text = Inventario.Instancia.PInventario[item].ToString();
+            }
+        }
     }
 
     public void BotonConsumir(int _id) {

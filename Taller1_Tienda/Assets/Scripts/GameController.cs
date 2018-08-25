@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-
-public class GameController{
+﻿public class GameController{
 
     public Shop mShop;
-    static GameController gameController;
+    private static GameController gameController;
     public static GameController _GameController
     {
         get
@@ -17,6 +14,10 @@ public class GameController{
     }
 
     public GameController() {
+        CrearShop();
+    }
+
+    private void CrearShop() {
         mShop = new Shop();
     }
 }
