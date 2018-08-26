@@ -10,13 +10,13 @@ public class EngineUnity : MonoBehaviour {
     [SerializeField] Text[] itemsInvTxt;
     [SerializeField] AudioClip[] audioClips;
     [SerializeField] GameObject canvasShop, canvasInventory;
-    [SerializeField] GameObject initialText;
+    [SerializeField] GameObject initialText, readme;
     [SerializeField] InputField descarteInput;
 
     void Start () {
-
         audioClips = Resources.LoadAll<AudioClip>("Sounds");
 
+        readme.SetActive(false);
         Shop.OnSatisfactoria += CompraTxtSatisfactoria;
         Shop.OnInsatisfactoria += CompraTxtInsatisfactoria;
         Shop.OnExisteNonConsumable += YaExisteNonConsumable;
@@ -35,6 +35,7 @@ public class EngineUnity : MonoBehaviour {
             canvasShop.SetActive(true);
             canvasInventory.SetActive(false);
             initialText.SetActive(false);
+            readme.SetActive(false);
             GetComponent<AudioSource>().clip = audioClips[1];
             GetComponent<AudioSource>().Play();
         }
@@ -44,19 +45,31 @@ public class EngineUnity : MonoBehaviour {
             canvasInventory.SetActive(true);
             canvasShop.SetActive(false);
             initialText.SetActive(false);
+            readme.SetActive(false);
             GetComponent<AudioSource>().clip = audioClips[1];
             GetComponent<AudioSource>().Play();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (canvasShop.activeInHierarchy || canvasInventory.activeInHierarchy)
+            if (canvasShop.activeInHierarchy || canvasInventory.activeInHierarchy || readme.activeInHierarchy)
             {
+                readme.SetActive(false);
                 canvasShop.SetActive(false);
                 canvasInventory.SetActive(false);
                 initialText.SetActive(true);
                 GetComponent<AudioSource>().clip = audioClips[0];
                 GetComponent<AudioSource>().Play();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.R)) {
+            if (canvasShop.activeInHierarchy || canvasInventory.activeInHierarchy || initialText.activeInHierarchy)
+            {
+                readme.SetActive(true);
+                canvasShop.SetActive(false);
+                canvasInventory.SetActive(false);
+                initialText.SetActive(false);
             }
         }
     }
