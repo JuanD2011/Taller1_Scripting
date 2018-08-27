@@ -1,6 +1,9 @@
 <<<<<<< HEAD
 # Taller1_Scripting
 
+Integrantes:
+Daniel Alarcón Rivas - 000312090
+Juan David Atehortúa Loaiza - 000312318
 
 //Link a ejecutable
 https://upbeduco-my.sharepoint.com/:u:/g/personal/daniel_alarcon_upb_edu_co/Edf-vwhC0zBBgpgm5a1RRLABJeg4UBNUGsV0vz_lHaxsjQ?e=jLF1oc
@@ -12,7 +15,7 @@ A. Cinemachine
 
 Unity Companion Cinemachine Code License 1.0
 
-Copyright � 2017 Unity Technologies ApS
+Copyright © 2017 Unity Technologies ApS
 
 
 
@@ -30,7 +33,7 @@ C. Emoji One
 
 Premium License Agreement Version 1.6
 
-Copyright � EmojiOne Inc. 2018
+Copyright © EmojiOne Inc. 2018
 
 //Background Music
 https://freesound.org/people/fmceretta/sounds/426699/ 
